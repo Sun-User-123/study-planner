@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+release/
+release-dist/
+
+# Local runtime data and secrets
+data/
+*.db
+*.db-shm
+*.db-wal
+jwt-secret
+.env
+.env.*
+
+# Logs and temporary files
+*.log
+logs/
+tmp-server-*/
+
+# Generated screenshots
+screenshots/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

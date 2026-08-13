@@ -1,0 +1,81 @@
+{
+  "name": "study-planner",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k -n server,web \"npm:dev:server\" \"npm:dev:web\"",
+    "dev:server": "node --watch server/index.js",
+    "dev:web": "vite",
+    "build": "vite build",
+    "build:server": "node scripts/build-server.mjs",
+    "start": "node server/index.js",
+    "desktop": "npm run build && npm run build:server && electron electron/main.cjs",
+    "desktop:dev": "concurrently -k -n server,web,desktop \"npm:dev:server\" \"npm:dev:web\" \"npm:desktop:wait\"",
+    "desktop:wait": "wait-on tcp:5173 && cross-env PLANNER_DEV=1 electron electron/main.cjs",
+    "pack": "npm run build && npm run build:server && electron-builder --win nsis --x64"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.13",
+    "docx": "^9.3.0",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "jsonwebtoken": "^9.0.2",
+    "lucide-react": "^0.525.0",
+    "mammoth": "^1.9.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.2",
+    "cross-env": "^7.0.3",
+    "electron": "^33.3.1",
+    "electron-builder": "^26.15.3",
+    "esbuild": "^0.28.2",
+    "vite": "^6.1.0",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.studyplanner.app",
+    "productName": "学习计划",
+    "asar": true,
+    "compression": "maximum",
+    "directories": {
+      "output": "release-dist"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json",
+      "!node_modules/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "release/server-bundle.cjs",
+        "to": "server-bundle.cjs"
+      },
+      {
+        "from": "release/node.exe",
+        "to": "node/node.exe"
+      }
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "学习计划",
+      "perMachine": false
+    }
+  }
+}
